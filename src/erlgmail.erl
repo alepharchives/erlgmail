@@ -215,7 +215,7 @@ handle_info(_Info, State) ->
 %% @end
 %%--------------------------------------------------------------------
 terminate(_Reason, {Sockets,_}) ->
-    dict:map(fun(_K, V) -> new_smtp:disconnect(V) end, Sockets).
+    dict:map(fun(_K, V) -> (catch new_smtp:disconnect(V)) end, Sockets).
 
 %%--------------------------------------------------------------------
 %% Func: code_change(OldVsn, State, Extra) -> {ok, NewState}
