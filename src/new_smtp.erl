@@ -28,8 +28,8 @@ connect({config, Host, Port, Username, Password}) ->
             ssl_send(Socket, binary_to_list(base64:encode(Username))),
             ssl_send(Socket, binary_to_list(base64:encode(Password))),
             Socket;
-        {error, _} ->
-            undefined
+        {error, _} = Err ->
+            Err
     end.
 
 %%--------------------------------------------------------------------
