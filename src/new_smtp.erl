@@ -20,13 +20,17 @@
 %% Description: connects to googlemail and logs the user in
 %%--------------------------------------------------------------------
 connect({config, Host, Port, Username, Password}) ->
-    {ok, Socket} = ssl:connect(Host, Port, [{active, false}], 1000),
-    recv(Socket, 0),
-    ssl_send(Socket, "HELO localhost"),
-    ssl_send(Socket, "AUTH LOGIN"),
-    ssl_send(Socket, binary_to_list(base64:encode(Username))),
-    ssl_send(Socket, binary_to_list(base64:encode(Password))),
-    Socket.
+    case ssl:connect(Host, Port, [{active, false}], 1000) of
+        {ok, Socket} ->
+            recv(Socket, 0),
+            ssl_send(Socket, "HELO localhost"),
+            ssl_send(Socket, "AUTH LOGIN"),
+            ssl_send(Socket, binary_to_list(base64:encode(Username))),
+            ssl_send(Socket, binary_to_list(base64:encode(Password))),
+            Socket;
+        {error, _} ->
+            undefined
+    end.
 
 %%--------------------------------------------------------------------
 %% Function: send
