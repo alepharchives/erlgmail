@@ -228,6 +228,11 @@ send_email(_Socket, _SmtpConfig, Message, 0) ->
     %%Log it, move on
     error_logger:error_msg("Failed to send message ~p~n", [Message]),
     failed;
+
+send_email({error, _}, SmtpConfig, Message, Times) ->
+    Socket = new_smtp:connect(SmtpConfig),
+    send_email(Socket, SmtpConfig, Message, Times+1);
+	
 send_email(Socket, SmtpConfig, Message, Times) ->
     S = try ssl:connection_info(Socket) of
 	    {ok, _} ->  
